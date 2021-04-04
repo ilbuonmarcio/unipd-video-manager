@@ -1,0 +1,10 @@
+__pycache__/
+.vscode/
+venv/
+videos/
+.env
+chromedriver.exe
+ffmpeg.exe
+manifests_urls.json
+files.txt
+export/
