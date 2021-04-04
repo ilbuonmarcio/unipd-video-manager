@@ -54,7 +54,7 @@ Per ottenere la lista dei video dei corsi, utilizzate il seguente comando dopo a
 
 In caso di errore, probabilmente rieseguendolo nella maggior parte dei casi va via da solo; in caso di problemi persistenti, aprire una pull request *dettagliatissima e minuziosa nei benché minimi dettagli* o non verrá considerata :)
 
-Per scaricare i corsi dei video, inveece, eseguire il seguente comando:
+Per scaricare i corsi dei video, invece, eseguire il seguente comando:
 
     python downloader.py
 
@@ -65,6 +65,10 @@ In caso questo download dei video dia errore, la causa principale è perché è 
 ### Bugs
 
 Avete trovato un bug? Aprite una pull request, grazie!
+
+### Collaborators
+
+[Luca Caprara](https://github.com/playhelp999)
 
 ### Licenza
 
