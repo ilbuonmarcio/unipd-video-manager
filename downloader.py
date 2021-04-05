@@ -34,6 +34,10 @@ def main():
         # sanitizing video names
         video_name = re.sub('[^\w\-_\.]', '_', video_name)
 
+        if os.path.isfile(f'export/{course_name}/{video_name}.mp4'):
+            print(f"Video {video_name}.mp4 giá scaricato, passo al prossimo...")
+            continue
+
         os.makedirs(f'./videos/', exist_ok=True)
         
         # downloading manifest file for different resolution urls
