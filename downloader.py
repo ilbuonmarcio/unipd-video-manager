@@ -5,8 +5,7 @@ import re
 import json
 import os
 
-
-def main():
+def download():
     videos = None
     with open("manifests_urls.json", 'r') as input_file:
         videos_string = "".join(input_file.readlines())
@@ -85,4 +84,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    download()
