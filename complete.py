@@ -76,53 +76,9 @@ if os.path.isfile(f'manifests_urls.json'):
         if courses[0] == course[0]:
             print("Corso già scelto, passo al download...")
         else:
-            driver.get(course[1])
-
-            # finding all course videos
-            videos_pages = driver.find_elements_by_css_selector('a[href^="https://elearning.dei.unipd.it/mod/kalvidres/view.php?id="]')
-            print(f"Trovati {len(videos_pages)} video")
-
-            nomi_video = []
-            videos_pages_urls = []
-            for i in range(0, len(videos_pages)):
-                try:
-                    nome_video = videos_pages[i].find_element_by_class_name('instancename').get_attribute('innerHTML').replace('<span class="accesshide "> Kaltura Video Resource</span>', '')
-                    url_video = videos_pages[i].get_attribute('href')
-
-                    nomi_video.append(nome_video)
-                    videos_pages_urls.append(url_video)
-                except:
-                    pass #ignoring wrong video link and title formats
-
-            name_video_id = 0
-            courses_dict[course[0]] = {}
-            for video_page_url in videos_pages_urls:
-                print(f"Grabbing {nomi_video[name_video_id]} at url: {video_page_url}")
-                driver.get(video_page_url)
-
-                # getting iframe wrapper of the video
-                iframe_wrapper = driver.find_element_by_css_selector('iframe#contentframe')
-                driver.switch_to.frame(iframe_wrapper)
-
-                # getting inner iframe of the video
-                iframe_inner = driver.find_element_by_css_selector('iframe#kplayer_ifp')
-                driver.switch_to.frame(iframe_inner)
-
-                # finally, find the right video! that nesting is a bitch to us using selenium!
-                video_element = driver.find_element_by_css_selector('.persistentNativePlayer')
-
-                video_src = video_element.get_attribute('src')
-                
-                courses_dict[course[0]][nomi_video[videos_pages_urls.index(video_page_url)]] = video_src
-
-                driver.switch_to.default_content()
-
-                name_video_id += 1
-
-            with open('manifests_urls.json', 'w') as output_file:
-                output_file.write(json.dumps(courses_dict))
-
-            driver.close()
+            download()
+else:
+    download()
 
 # downloading videos
 videos = None
@@ -201,3 +157,54 @@ for video_name, url_for_manifest in videos.items():
         os.remove("files.txt")
 
     video_download_id += 1
+
+
+
+def download():
+    driver.get(course[1])
+
+                # finding all course videos
+                videos_pages = driver.find_elements_by_css_selector('a[href^="https://elearning.dei.unipd.it/mod/kalvidres/view.php?id="]')
+                print(f"Trovati {len(videos_pages)} video")
+
+                nomi_video = []
+                videos_pages_urls = []
+                for i in range(0, len(videos_pages)):
+                    try:
+                        nome_video = videos_pages[i].find_element_by_class_name('instancename').get_attribute('innerHTML').replace('<span class="accesshide "> Kaltura Video Resource</span>', '')
+                        url_video = videos_pages[i].get_attribute('href')
+
+                        nomi_video.append(nome_video)
+                        videos_pages_urls.append(url_video)
+                    except:
+                        pass #ignoring wrong video link and title formats
+
+                name_video_id = 0
+                courses_dict[course[0]] = {}
+                for video_page_url in videos_pages_urls:
+                    print(f"Grabbing {nomi_video[name_video_id]} at url: {video_page_url}")
+                    driver.get(video_page_url)
+
+                    # getting iframe wrapper of the video
+                    iframe_wrapper = driver.find_element_by_css_selector('iframe#contentframe')
+                    driver.switch_to.frame(iframe_wrapper)
+
+                    # getting inner iframe of the video
+                    iframe_inner = driver.find_element_by_css_selector('iframe#kplayer_ifp')
+                    driver.switch_to.frame(iframe_inner)
+
+                    # finally, find the right video! that nesting is a bitch to us using selenium!
+                    video_element = driver.find_element_by_css_selector('.persistentNativePlayer')
+
+                    video_src = video_element.get_attribute('src')
+                    
+                    courses_dict[course[0]][nomi_video[videos_pages_urls.index(video_page_url)]] = video_src
+
+                    driver.switch_to.default_content()
+
+                    name_video_id += 1
+
+                with open('manifests_urls.json', 'w') as output_file:
+                    output_file.write(json.dumps(courses_dict))
+
+                driver.close()
