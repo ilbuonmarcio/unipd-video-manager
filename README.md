@@ -62,11 +62,6 @@ Ti chiederá di selezionare il numero del corso, inseritelo e premete il tasto I
 
 In caso questo download dei video dia errore, la causa principale è perché è passato troppo tempo dall'esecuzione del `parser.py` ed il `downloader.py`, e quindi di conseguenza i link sono scaduti (vi ho giá detto quanto amo questa piattaforma?)
 
-- - -
-
-Nel caso vogliate effettuare l'operazione in una sessione unica, é presente uno script chiamato `complete.py` che ci permette di selezionare, scaricare e elaborare un corso intero per volta. Per utilizzarlo, basta eseguire il seguente comando:
-
-    python complete.py
 
 ### Bugs
 

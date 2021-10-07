@@ -5,31 +5,31 @@ import re
 import json
 import os
 
-def download():
-    videos = None
-    with open("manifests_urls.json", 'r') as input_file:
-        videos_string = "".join(input_file.readlines())
-        videos = json.loads(videos_string)
+videos = None
+with open("manifests_urls.json", 'r') as input_file:
+    videos_string = "".join(input_file.readlines())
+    videos = json.loads(videos_string)
 
-    courses = list(videos.keys())
-    for course in courses:
-        print(f'{courses.index(course)+1}. -> {course}')
+courses = list(videos.keys())
+for course in courses:
+    print(f'{courses.index(course)+1}. -> {course}')
 
-    course_selected = int(input("Seleziona il corso da scaricare: ")) - 1
+course_selected = int(input("Seleziona il corso da scaricare: ")) - 1
+try:
+    course_name = courses[course_selected]
+except:
+    print("Corso non disponibile, idiota! Ma sai contare?")
+    exit(-1)
+
+videos = videos[course_name]
+
+# sanitizing video courses
+course_name = re.sub('[^\w\-_\.]', '_', course_name)
+
+print(f'Corso selezionato: {course_name}, numero video disponibili: {len(videos)}')
+
+for video_name, url_for_manifest in videos.items():
     try:
-        course_name = courses[course_selected]
-    except:
-        print("Corso non disponibile, idiota! Ma sai contare?")
-        exit(-1)
-    
-    videos = videos[course_name]
-
-    # sanitizing video courses
-    course_name = re.sub('[^\w\-_\.]', '_', course_name)
-
-    print(f'Corso selezionato: {course_name}, numero video disponibili: {len(videos)}')
-
-    for video_name, url_for_manifest in videos.items():
         # sanitizing video names
         video_name = re.sub('[^\w\-_\.]', '_', video_name)
 
@@ -44,7 +44,7 @@ def download():
         if response.status_code != 200 or len(response.content) == 0:
             print("Error during manifest download, aborting")
             exit(-1)
-    
+
         # getting best quality possible
         content = response.content.decode('utf-8')
         url_for_tokens = [row for row in content.split("\n") if len(row) > 0][-1]
@@ -81,7 +81,5 @@ def download():
 
         # deleting tokens from disk
         shutil.rmtree(f'./videos/')
-
-
-if __name__ == "__main__":
-    download()
+    except:
+        print(f"Problemi nel download del video '{video_name}'. Passo al successivo")
