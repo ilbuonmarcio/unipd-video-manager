@@ -1,5 +1,6 @@
 from pprint import pprint
 from requests import get
+import time
 import shutil
 import re
 import json
@@ -11,14 +12,15 @@ with open("manifests_urls.json", 'r') as input_file:
     videos = json.loads(videos_string)
 
 courses = list(videos.keys())
+
 for course in courses:
-    print(f'{courses.index(course)+1}. -> {course}')
+    print(f'{courses.index(course)+1} -> {course} con {len(videos[course])} video')
 
 course_selected = int(input("Seleziona il corso da scaricare: ")) - 1
 try:
     course_name = courses[course_selected]
 except:
-    print("Corso non disponibile, idiota! Ma sai contare?")
+    print("Corso selezionato non valido")
     exit(-1)
 
 videos = videos[course_name]
@@ -27,6 +29,7 @@ videos = videos[course_name]
 course_name = re.sub('[^\w\-_\.]', '_', course_name)
 
 print(f'Corso selezionato: {course_name}, numero video disponibili: {len(videos)}')
+time.sleep(0.5)
 
 for video_name, url_for_manifest in videos.items():
     try:
@@ -60,8 +63,11 @@ for video_name, url_for_manifest in videos.items():
         tokens_urls = [row for row in content.split("\n") if len(row) > 0 and row[:5] == 'https']
         
         token_id = 0
+        total_token_id = 0
         for url in tokens_urls:
-            print(f"Downloading token id {str(token_id).zfill(4)}")
+            total_token_id += 1
+        for url in tokens_urls:
+            print(f"Downloading token id {str(token_id).zfill(4)}/{total_token_id}")
             with open(f'./videos/{str(token_id).zfill(4)}.mp4', "wb") as file:
                 response = get(url)
                 if response.status_code != 200 or len(response.content) == 0:
