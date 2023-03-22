@@ -79,6 +79,8 @@ for video_name, url_for_manifest in videos.items():
         # concatenating all downloaded files
         video_tokens = os.listdir(f'./videos/')
         video_tokens = [video for video in video_tokens if video]
+        video_tokens = sorted(video_tokens, key = lambda x: str(x))
+
         with open('files.txt', 'w') as output_file:
             output_file.write("\n".join([f"file 'videos/{token}'" for token in video_tokens]))
 
